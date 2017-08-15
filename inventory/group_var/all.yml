@@ -1,0 +1,5 @@
+ansible_user: santosh
+ansible_ssh_pass: santu45455
+ansible_become_pass: santu45455
+
+

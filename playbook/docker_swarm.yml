@@ -1,0 +1,7 @@
+---
+-name: Docker swarm
+ hosts: docker_swarm
+ become: yes
+ roles:
+   -docker_swarm
+

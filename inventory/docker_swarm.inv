@@ -1,0 +1,6 @@
+[docker_swarm]
+santosh001 ansible_host=192.168.1.67
+santosh002 ansible_host=192.168.1.176
+santosh003 ansible_host=192.168.1.97
+santosh004 ansible_host=192.168.1.93
+santosh005 ansible_host=192.168.1.221
