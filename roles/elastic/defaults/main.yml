@@ -1,0 +1,6 @@
+---
+# include defaults
+
+elasticsearch.service_file: /opt/swetha/elasticsearch.service
+
+source_dir: /opt/elastic/elasticsearch-all-5.2.1DTV-12.tar.gz

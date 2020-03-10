@@ -1,0 +1,8 @@
+---
+
+# include defaults
+
+ rabbitmq.service_file: /opt/swetha/rabbitmq.service
+
+ source_dir: /opt/rabbitmq/rabbitmq-all-3.6.5DTV-7 (1).tar.gz
+I

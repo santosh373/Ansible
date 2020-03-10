@@ -1,0 +1,12 @@
+---
+# handlers file for install and unistall
+
+- name: enable elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+
+- name: start elastic search
+  service:
+    name: elasticsearch
+    state: started

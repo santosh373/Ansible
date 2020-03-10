@@ -1,0 +1,8 @@
+---
+
+ - name: "Install RabbitMQ"
+   hosts: rabbitmq
+   become: yes
+   roles:
+     - rabbitmq
+     - ntp

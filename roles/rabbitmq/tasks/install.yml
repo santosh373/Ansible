@@ -1,0 +1,34 @@
+---
+
+# user create
+
+- name: create a user eco
+  script: user.sh
+  become: yes
+  when: force is defined and force|bool == true
+  ignore_errors: yes
+  tags:
+    - user
+
+
+- name: create directories if they don't exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: eco
+    group: eco
+    mode: 0775
+  with_items:
+    - /opt/pace/
+    - /collect/data/
+    - /etc/init.d/
+    - /etc/sysconfig/
+    - /etc/logrotate.d/
+
+- name: "copy tar file"
+  unarchive:
+    src: /opt/rabbitmq/rabbitmq-all-3.6.5DTV-7 (1).tar.gz
+    dest: /opt/pace/
+
+#- name: "install elastic search"
+#

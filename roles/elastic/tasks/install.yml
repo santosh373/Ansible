@@ -1,0 +1,180 @@
+---
+
+# user create
+
+- name: create a user eco
+  script: user.sh
+  become: yes
+  when: force is defined and force|bool == true
+  ignore_errors: yes
+  tags:
+    - user
+
+
+- name: create directories if they don't exist
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: eco
+    group: eco
+    mode: 0775
+  with_items:
+    - /opt/pace/
+    - /collect/data/
+    - /etc/init.d/
+    - /etc/sysconfig/
+    - /etc/logrotate.d/
+
+- name: "copy tar file"
+  unarchive:
+    src: /opt/elastic/elasticsearch-all-5.2.1DTV-12.tar.gz
+    dest: /opt/pace/
+
+#- name: "install elastic search"
+#  yum: 
+ #   name: /opt/pace/elasticsearch-prod-5.2.1DTV-11.x86_64.rpm
+  #  state: present
+
+- name: create a file  
+  file:
+    path: /etc/sysconfig/elasticsearch
+    state: touch
+    mode: "u=rw,g=r,o=r"
+
+- name: create a file
+  file: 
+    path: /etc/init.d/elasticsearch
+    owner: eco
+    group: eco
+    mode: 0755
+    state: directory
+
+- name: copy elasticsearch.service file
+  copy:
+   src: /opt/swetha/elasticsearch.service
+   dest: /etc/systemd/system
+   owner: root
+   group: root
+   mode: 0644
+   backup: yes
+    
+
+#- name: copying the bin to elastic search
+ # command: cp /opt/pace/elasticsearch/bin/elasticsearch.init  /etc/init.d/elasticsearch
+
+#- name: copy curator config
+#  command: cp /opt/pace/elasticsearch/curator/conf/rotateCurator  /etc/logrotate.d/
+
+#adding files in /etc/sysctl.conf
+
+- lineinfile: dest=/etc/sysctl.conf line='net.core.rmem_default = 1048576' state=present
+- lineinfile: dest=/etc/sysctl.conf line='net.core.wmem_default = 1048576' state=present
+- lineinfile: dest=/etc/sysctl.conf line='net.core.rmem_max = 8388608' state=present
+- lineinfile: dest=/etc/sysctl.conf line='net.core.wmem_max = 8388608'state=present
+- lineinfile: dest=/etc/sysctl.conf line='net.ipv4.tcp_max_syn_backlog = 5000'state=present
+- lineinfile: dest=/etc/sysctl.conf line='net.core.netdev_max_backlog = 5000' state=present
+- lineinfile: dest=/etc/sysctl.conf line='net.ipv4.tcp_rmem = 87380 4194304 8388608' state=present
+- lineinfile: dest=/etc/sysctl.conf line='net.ipv4.tcp_wmem = 87380 4194304 8388608' state=present
+- lineinfile: dest=/etc/sysctl.conf line='vm.max_map_count = 262144' state=present
+
+
+# adding new lines in limits.conf
+
+- lineinfile: dest=/etc/security/limits.conf line='eco - memlock unlimited' state=present 
+- lineinfile: dest=/etc/security/limits.conf line='eco - nofile 120000' state=present
+- lineinfile: dest=/etc/security/limits.conf line='eco - nproc 120000' state=present
+- lineinfile: dest=/etc/security/limits.conf line='eco - as unlimited' state=present
+
+# adding 
+
+- lineinfile: dest=/etc/security/limits.d/20-nproc.conf line='eco - nproc 100000' state=present
+
+- name: Add elasticsearch to chkconfig
+  command: chkconfig --add elasticsearch
+  register: add-config
+  ignore_errors: True
+  become: yes
+
+- name: Checks whether the elasticsearch is enabled
+  command: chkconfig elasticsearch on
+  register: check-config
+  ignore_errors: True
+  become: yes
+
+
+- file:
+   dest: /opt/pace/elasticsearch
+   owner: eco
+   group: eco
+   mode: 0755
+   recurse: yes
+
+- file:
+   dest: /opt/pace/elasticsearch/bin/elasticsearch.init
+   owner: eco
+   group: eco
+   mode: 0755
+   recurse: yes
+
+- file:
+   dest: /opt/pace/elasticsearch/jdk/bin/*
+   owner: eco
+   group: eco
+   mode: "a=x"
+   recurse: yes
+   
+- file:
+   dest: /opt/pace/elasticsearch/share/elasticsearch/bin/*
+   owner: eco
+   group: eco
+   mode: "a=x"
+   recurse: yes
+  
+- file:
+   dest: /opt/pace/elasticsearch/curator/rhel6/curator
+   owner: eco
+   group: eco
+   mode: "a=x"
+   recurse: yes
+
+- file:
+   dest: /opt/pace/elasticsearch/curator/rhel7/curator
+   owner: eco
+   group: eco
+   mode: "a=x"
+   recurse: yes  
+  
+#- name: Install elastic search
+ # yum:
+  #  name: {{ $RPM_SOURCE_DIR }}/{{ twowiresource }}
+
+# prepare elastic
+
+#- name: prepare elastic search for installation
+ 
+ # script: prepare.sh {{ RPM_BUILD_ROOT }} {{ RPM_SOURCE_DIR }} {{ twowiresource }}
+  
+  #become: yes
+  #when: force is defined and force|bool == true
+  #ignore_errors: yes
+  
+  #tags:
+
+#install elastic search
+
+#- name: elasticsearch to start on boot
+ # script: boot.sh
+  #become: yes
+ # when: force is defined and force|bool == true
+ # ignore_errors: yes
+  #tags:
+   # - boot
+
+
+#- name: set crontab for elastic search
+ # script: crontab.sh
+  #become: yes
+  #when: force is defined and force|bool == true
+ # ignore_errors: yes
+  #tags:
+   # - crontab

@@ -1,0 +1,13 @@
+---
+#Handlers file for install and unistall
+
+- name: enable rabbitmq 
+  service:
+    name: rabbitmq
+    enabled: yes
+
+- name: start rabbitmq
+  service:
+    name: rabbitmq
+    state: started
+

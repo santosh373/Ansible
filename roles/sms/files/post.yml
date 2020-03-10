@@ -1,0 +1,54 @@
+---
+
+# high performance
+ 
+- lineinfile: dest=/etc/security/limits.conf line='eco - nofile 100000' state=present
+- lineinfile: dest=/etc/security/limits.conf line='eco - sigpending 131072' state=present
+- lineinfile: dest=/etc/security/limits.conf line='eco - nproc 100000' state=present
+- lineinfile: dest=/etc/security/limits.d/20-nproc.conf line='eco - nproc 100000' state=present
+- lineinfile: dest=/etc/security/limits.conf line='eco - memlock unlimited' state=present
+- lineinfile: dest=/etc/security/limits.conf line='eco - as unlimited' state=present
+
+# Add nginx to start on boot, and enable
+#- name: Add redis to chkconfig
+  #command: chkconfig --add r
+  #register: add-config
+
+#- name: Checks whether the redis is enable
+  #command: chkconfig redis on
+  #register: check-config
+#
+# Copy custom config files. Overwrite existing files.
+cp ${SMSHOME}/bin/smsserver1_root /etc/init.d/smsserver1
+cp ${SMSHOME}/bin/sms.service /etc/systemd/system/sms.service
+cp ${NGINXHOME}/bin/eco_nginx.service /etc/systemd/system/eco_nginx.service
+#
+#
+## Ensure proper file ownership
+#chown -R eco:eco ${SMSHOME}
+#chmod 755 /opt/pace/sms/bin/smsserver1
+#chmod 664 /etc/systemd/system/sms.service
+#chmod 664 /etc/systemd/system/eco_nginx.service
+#systemctl enable sms.service
+#systemctl enable eco_nginx.service
+#~
+#~
+#- file:
+#    dest: /opt/pace/sms
+#        owner: eco
+#            group: eco
+#                mode: 0755
+#                    recurse: yes
+#
+#                    - file:
+#                        dest: /opt/pace/redis/bin
+#                            mode: 0755
+#                                recurse: yes
+#
+#                                - file:
+#                                    dest: /opt/pace/redis/bin
+#                                        mode: "a=x"
+#                                            recurse: yes
+#
+
+#

@@ -1,0 +1,9 @@
+[local]
+localhost
+
+
+[elastic]
+10.99.201.68
+
+[rabbitmq]
+10.99.201.202

@@ -1,0 +1,4 @@
+ansible_user: root
+ansible_ssh_pass: test123
+ansible_become_pass: test123
+

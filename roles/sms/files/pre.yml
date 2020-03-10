@@ -1,0 +1,10 @@
+---
+
+- group:
+    name: eco
+    state: present
+
+- user:
+    name: eco
+    group: eco
+

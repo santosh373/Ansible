@@ -1,0 +1,6 @@
+---
+- name: "run elastic search"
+  gather_facts: false
+  host: elastic
+  roles:
+    - elasticsearch

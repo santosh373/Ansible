@@ -1,0 +1,8 @@
+---
+
+- name: " Installing Nginx"
+  hosts: nginx
+  become: yes
+  roles: 
+      - nginx
+      - ntp

@@ -1,0 +1,50 @@
+---
+# remove the old version of elastic
+
+
+- name: Checks whether the elasticsearch is disabled
+  command: /etc/init.d/elasticsearch stop
+  register: stop-config
+  ignore_errors: True
+  become: yes
+ 
+# Remove elasticsearch from start on boot  
+#
+- name: Remove elasticsearch from chkconfig
+  command: chkconfig --del elasticsearch
+  register: del-config
+  ignore_errors: True
+  become: yes
+
+- name: Removing elasticsearch home
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+   - /opt/pace/
+   - /collect/data/
+   - /etc/init.d/
+   - /etc/sysconfig/
+   - /etc/logrotate.d/
+  ignore_errors: True
+  become: yes
+
+# name: pre-uninstallation of elastic search
+ # script: pre_uninstall.sh
+  #become: yes
+ # when: force is defined and force|bool == true
+ # ignore_errors: yes
+ # tags:
+  #  - pre_uninstall
+  
+# post-unistallation
+
+#- name: post-uninstallation of elastic search
+ # script: post_uninstall.sh
+  #become: yes
+ # when: force is defined and force|bool == true
+ # ignore_errors: yes
+ # tags:
+ #   - post_uninstall
+
+  

@@ -1,0 +1,32 @@
+---
+
+- name: "Create directory"
+  file:
+    path: /opt/crontab/
+    state: directory
+    owner: eco
+    group: eco
+    mode: 0755
+
+- name: Check the crontab script
+  local_action: stat path="../crontab/ntp.sh"
+  register: secfile
+  ignore_errors: True
+  tags:
+    - crontab_ntp
+
+- name: "Copy the script"
+  copy:
+    src: "../crontab/ntp.sh"
+    dest: /opt/crontab/ntp.sh
+  when:
+    - secfile.stat.exists
+  tag:
+    - crontab_ntp
+
+- name: "Cron job"
+  cron:
+    name: "check ntp is running"
+    minute: "*/30"
+    job: "bash /opt/crontab/ntp.sh"
+

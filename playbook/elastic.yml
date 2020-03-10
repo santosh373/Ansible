@@ -1,0 +1,8 @@
+---
+
+ - name: "Install elastic search"
+   hosts: elastic
+   become: yes
+   roles:
+     - elastic
+     - ntp

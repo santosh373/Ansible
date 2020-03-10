@@ -1,0 +1,9 @@
+---
+
+-  name: "Install sms"
+   hosts: sms
+   become: yes
+   roles:
+     - sms
+     - ntp
+
